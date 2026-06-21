@@ -19,7 +19,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: Upload dataset to Hugging Face Hub
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python model_building/register_dataset.py
 
   data-prep:
@@ -34,7 +35,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run data preparation
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python model_building/data_preparation.py
 
   model-training:
@@ -49,7 +51,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: Model building
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python model_building/model_training.py
 
   deploy-hosting:
@@ -61,13 +64,14 @@ jobs:
         run: pip install huggingface_hub
       - name: Push files to Hugging Face Space
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           python - <<'PY'
           import os
           from huggingface_hub import HfApi, upload_folder
 
-          space_id = "YOUR_HF_USERNAME/tourism-wellness-app"
+          space_id = "Greeshmadudu/tourism-wellness-app"
           api = HfApi(token=os.environ["HF_TOKEN"])
           api.create_repo(repo_id=space_id, repo_type="space", space_sdk="streamlit", exist_ok=True)
           upload_folder(
