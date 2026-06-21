@@ -4,7 +4,7 @@ from pathlib import Path
 import joblib
 import mlflow
 import pandas as pd
-from huggingface_hub import hf_hub_download, upload_file
+from huggingface_hub import HfApi, hf_hub_download, upload_file
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
@@ -100,6 +100,10 @@ def main():
         mlflow.sklearn.log_model(pipeline, "model")
 
         joblib.dump(pipeline, MODEL_PATH)
+
+        api = HfApi()
+        api.create_repo(repo_id=MODEL_REPO, repo_type="model", exist_ok=True)
+
         upload_file(
             path_or_fileobj=str(MODEL_PATH),
             path_in_repo="tourism_model.joblib",
